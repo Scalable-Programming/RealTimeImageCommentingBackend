@@ -13,7 +13,7 @@ export const sendInitialData = async (socket: Socket) => {
   const currentCursorId = await getCursorIdBySocketId(socket.id);
 
   const allCursors = await cursorApi.getAllCursors();
-  socket.broadcast.emit(
+  socket.emit(
     EventListenerNames.SEND_ALL_OTHER_CURSORS,
     allCursors.filter(({ entityId }) => entityId !== currentCursorId)
   );
