@@ -5,11 +5,12 @@ export enum EventListenerNames {
   COMMENT_ADDED = "commentAdded",
   SEND_NEW_COMMENT = "sendNewComment",
   SEND_ALL_OTHER_CURSORS = "sendAllOtherCursors",
+  CURSOR_DISCONNECT = "cursorDisconnect",
 }
 
 interface XY {
-  x: number;
-  y: number;
+  x: string;
+  y: string;
 }
 
 export interface CursorProps extends XY {}

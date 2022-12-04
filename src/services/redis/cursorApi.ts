@@ -29,6 +29,8 @@ class CursorApi {
     cursor.y = y;
 
     await this.getCursor().save(cursor);
+
+    return cursor;
   };
 
   getCursorById = async (id: string) => {
