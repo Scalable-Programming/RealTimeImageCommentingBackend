@@ -6,6 +6,8 @@ export enum EventListenerNames {
   SEND_NEW_COMMENT = "sendNewComment",
   SEND_ALL_OTHER_CURSORS = "sendAllOtherCursors",
   CURSOR_DISCONNECT = "cursorDisconnect",
+  SEND_ALL_COMMENTS = "sendAllComments",
+  ADD_NEW_COMMENT = "addNewComments",
 }
 
 interface XY {
@@ -17,4 +19,5 @@ export interface CursorProps extends XY {}
 
 export interface CommentProps extends XY {
   message: string;
+  cursorId: string;
 }

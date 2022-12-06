@@ -7,6 +7,7 @@ import {
   sendInitialData,
   registerOnDisconect,
   addCursorOnConnect,
+  sendAllComments,
 } from "./eventListeners";
 
 export const connectWebSocket = (server: Server) => {
@@ -18,5 +19,6 @@ export const connectWebSocket = (server: Server) => {
     await createUpdateCursor(socket);
     await registerOnDisconect(socket);
     await sendInitialData(socket);
+    await sendAllComments(socket);
   });
 };

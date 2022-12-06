@@ -6,7 +6,7 @@ import { client } from ".";
 class CursorApi {
   #repo?: Repository<Cursor>;
 
-  getCursor() {
+  getRepo() {
     if (!this.#repo) {
       throw new Error("No cursor");
     }
@@ -16,11 +16,11 @@ class CursorApi {
 
   async init() {
     this.#repo = client.fetchRepository(cursorSchema);
-    await this.getCursor().createIndex();
+    await this.getRepo().createIndex();
   }
 
   deleteCursor = async (id: string) => {
-    await this.getCursor().remove(id);
+    await this.getRepo().remove(id);
   };
 
   updateCursor = async (id: string, { x, y }: CursorProps) => {
@@ -28,21 +28,21 @@ class CursorApi {
     cursor.x = x;
     cursor.y = y;
 
-    await this.getCursor().save(cursor);
+    await this.getRepo().save(cursor);
 
     return cursor;
   };
 
   getCursorById = async (id: string) => {
-    return this.getCursor().fetch(id);
+    return this.getRepo().fetch(id);
   };
 
   getAllCursors = async () => {
-    return this.getCursor().search().return.all();
+    return this.getRepo().search().return.all();
   };
 
   addNewCursor = async ({ x, y }: CursorProps) => {
-    return await this.getCursor().createAndSave({ x, y });
+    return await this.getRepo().createAndSave({ x, y });
   };
 }
 

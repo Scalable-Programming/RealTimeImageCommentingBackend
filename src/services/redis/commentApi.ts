@@ -6,7 +6,7 @@ import { client } from ".";
 class CommentApi {
   #repo?: Repository<Comment>;
 
-  getCursor() {
+  getRepo() {
     if (!this.#repo) {
       throw new Error("No cursor");
     }
@@ -16,23 +16,33 @@ class CommentApi {
 
   async init() {
     this.#repo = client.fetchRepository(commentSchema);
-    await this.getCursor().createIndex();
+    await this.getRepo().createIndex();
   }
 
-  getAllComments = async () => {
-    return this.getCursor().search().return.all();
+  getAllComments = async (cursorId: string) => {
+    return this.getRepo()
+      .search()
+      .where("cursorId")
+      .is.not.equalTo(cursorId)
+      .return.all();
   };
 
   getCommentById = async (id: string) => {
-    return this.getCursor().fetch(id);
+    return this.getRepo().fetch(id);
   };
 
-  addNewComment = async ({ message, x, y }: CommentProps) => {
-    return await this.getCursor().createAndSave({ x, y, message });
+  addNewComment = async ({ message, x, y, cursorId }: CommentProps) => {
+    return await this.getRepo().createAndSave({
+      x,
+      y,
+      message,
+      cursorId,
+      createdAt: new Date(),
+    });
   };
 
   deleteComment = async (id: string) => {
-    await this.getCursor().remove(id);
+    await this.getRepo().remove(id);
   };
 
   updateComment = async (id: string, { x, y, message }: CommentProps) => {
@@ -41,7 +51,7 @@ class CommentApi {
     comment.y = y;
     comment.message = message;
 
-    await this.getCursor().save(comment);
+    await this.getRepo().save(comment);
   };
 }
 

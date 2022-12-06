@@ -35,8 +35,19 @@ export const createUpdateCursor = async (socket: Socket) => {
 };
 
 export const registerNewComment = async (socket: Socket) => {
-  socket.on(EventListenerNames.COMMENT_ADDED, async ({ x, y, message }) => {
-    const newComment = await commentApi.addNewComment({ x, y, message });
+  socket.on(EventListenerNames.ADD_NEW_COMMENT, async ({ x, y, message }) => {
+    let cursorId = await getCursorIdBySocketId(socket.id);
+
+    if (!cursorId) {
+      return;
+    }
+
+    const newComment = await commentApi.addNewComment({
+      x,
+      y,
+      message,
+      cursorId,
+    });
     socket.broadcast.emit(EventListenerNames.SEND_NEW_COMMENT, newComment);
   });
 };
@@ -59,4 +70,11 @@ export const registerOnDisconect = async (socket: Socket) => {
 export const addCursorOnConnect = async (socket: Socket) => {
   const cursor = await cursorApi.addNewCursor({ x: "0%", y: "0%" });
   await setCursorIdBySocketId(socket.id, cursor.entityId);
+};
+
+export const sendAllComments = async (socket: Socket) => {
+  let cursorId = (await getCursorIdBySocketId(socket.id)) as string;
+  const allComments = await commentApi.getAllComments(cursorId);
+
+  socket.emit(EventListenerNames.SEND_ALL_COMMENTS, allComments);
 };

@@ -13,4 +13,5 @@ export const commentSchema = new Schema(Comment, {
   message: { type: "string" },
   x: { type: "string" },
   y: { type: "string" },
+  cursorId: { type: "string" },
 });
